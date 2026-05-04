@@ -1,0 +1,104 @@
+:root {
+  --ft-primary: #0d6efd;
+  --ft-accent: #ffc107;
+  --ft-bg: #f7f9fc;
+}
+
+body {
+  background: var(--ft-bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+footer {
+  flex-shrink: 0;
+}
+
+.brand-logo {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.flight-card {
+  border: 1px solid #e1e5ee;
+  border-radius: 0.75rem;
+  background: #fff;
+  transition: box-shadow 0.2s;
+}
+.flight-card:hover {
+  box-shadow: 0 6px 22px rgba(13, 110, 253, 0.12);
+}
+
+.route-arrow {
+  color: var(--ft-primary);
+  font-size: 1.2rem;
+}
+
+/* Seat map */
+.seat-map-wrapper {
+  overflow-x: auto;
+  padding: 0.5rem 0;
+}
+.seat-map {
+  display: inline-block;
+  min-width: 100%;
+}
+.seat-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  justify-content: center;
+}
+.seat-row .row-label {
+  width: 1.6rem;
+  text-align: right;
+  color: #666;
+  font-size: 0.85rem;
+}
+.seat {
+  width: 2.2rem; height: 2.2rem;
+  border: 1px solid #b8c0cc; border-radius: 0.4rem;
+  background: #fff; cursor: pointer;
+  font-size: 0.78rem; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center;
+  user-select: none;
+}
+.seat.aisle { margin-right: 0.6rem; }
+.seat:hover { background: #e7f1ff; border-color: var(--ft-primary); }
+.seat.selected { background: var(--ft-primary); color: white; border-color: var(--ft-primary); }
+.seat.taken { background: #d9534f; color: white; cursor: not-allowed; border-color: #b32a26; }
+
+.legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.85rem; }
+.legend .swatch {
+  width: 1rem; height: 1rem; border-radius: 0.2rem; display: inline-block;
+  vertical-align: middle; margin-right: 0.3rem;
+}
+.swatch.free { background: #fff; border: 1px solid #b8c0cc; }
+.swatch.selected { background: var(--ft-primary); }
+.swatch.taken { background: #d9534f; }
+
+.eticket {
+  border: 2px dashed var(--ft-primary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  background: white;
+}
+
+@media print {
+  body * { visibility: hidden; }
+  .eticket, .eticket * { visibility: visible; }
+  .eticket { position: absolute; inset: 0; margin: 1rem; border: none; }
+  nav, footer, .no-print { display: none !important; }
+}
+
+@media (max-width: 575.98px) {
+  .seat { width: 1.9rem; height: 1.9rem; font-size: 0.7rem; }
+}
