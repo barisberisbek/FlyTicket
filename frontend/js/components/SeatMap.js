@@ -43,17 +43,20 @@ export class SeatMap extends Component {
       }
       seats.push(row);
     }
-    const grid = seats.map((row, idx) =>
-      `<div class="seat-row"><span class="row-label">${idx + 1}</span>${row.join('')}</div>`).join('');
+    const grid = seats.map((row, idx) => {
+      const rowNum = idx + 1;
+      return `<div class="seat-row" data-row="${rowNum}"><span class="row-label">${rowNum}</span>${row.join('')}</div>`;
+    }).join('');
 
     const selArr = [...this.state.selected];
     const selText = selArr.length === 0 ? '—' : selArr.join(', ');
-    const maxNote = maxSel > 1 ? ` <span class="text-muted small">(select up to ${maxSel})</span>` : '';
+    const maxNote = maxSel > 1
+      ? `<span class="badge bg-secondary ms-2" style="font-size:.7rem">Select ${maxSel}</span>` : '';
 
     return `
     <div>
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <h6 class="mb-0">Choose your seat${maxNote}</h6>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0 fw-700">Choose Your Seat ${maxNote}</h6>
         <div class="legend small">
           <span><span class="swatch free"></span>Free</span>
           <span><span class="swatch selected"></span>Selected</span>
@@ -61,9 +64,27 @@ export class SeatMap extends Component {
         </div>
       </div>
       <div class="seat-map-wrapper">
-        <div class="seat-map">${grid}</div>
+        <div class="ft-cabin-class-label ft-cabin-business">
+          <i class="bi bi-star-fill me-1"></i>Business (Rows 1–3)
+        </div>
+        <div class="ft-col-labels">
+          <span style="width:1.6rem"></span>
+          <span class="ft-col-label">A</span>
+          <span class="ft-col-label">B</span>
+          <span class="ft-col-label">C</span>
+          <span style="width:.6rem"></span>
+          <span class="ft-col-label">D</span>
+          <span class="ft-col-label">E</span>
+          <span class="ft-col-label">F</span>
+        </div>
+        <div class="seat-map">${grid.split('data-row="3"').join('data-row="3" id="last-biz"')}</div>
+        <hr class="ft-cabin-divider" />
+        <div class="ft-cabin-class-label ft-cabin-economy">Economy</div>
       </div>
-      <div class="mt-2 small">Selected: <strong>${selText}</strong></div>
+      <div class="mt-2 small fw-600">
+        <i class="bi bi-geo-alt me-1" style="color:var(--ft-blue)"></i>
+        Selected: <span style="color:var(--ft-blue)">${selText}</span>
+      </div>
     </div>`;
   }
 
