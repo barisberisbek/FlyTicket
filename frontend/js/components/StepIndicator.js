@@ -1,26 +1,28 @@
 import { Component } from './Component.js';
 
 const STEPS = [
-  { n: 1, icon: '🔍', label: 'Search' },
-  { n: 2, icon: '💺', label: 'Select Seat' },
-  { n: 3, icon: '💳', label: 'Payment' },
-  { n: 4, icon: '✅', label: 'Confirm' },
+  { n: 1, label: 'Search' },
+  { n: 2, label: 'Select Seat' },
+  { n: 3, label: 'Payment' },
+  { n: 4, label: 'Confirm' },
 ];
 
 export class StepIndicator extends Component {
   template() {
     const current = this.props.currentStep || 1;
-    const parts = STEPS.map((s, i) => {
-      const cls = s.n < current ? 'done' : s.n === current ? 'active' : '';
-      const icon = s.n < current ? '✓' : s.icon;
-      const sep = i < STEPS.length - 1
-        ? `<span class="ft-step-sep">›</span>` : '';
+    const parts = STEPS.map((s) => {
+      const done   = s.n < current;
+      const active = s.n === current;
+      const cls = done ? 'done' : active ? 'active' : '';
+      const circleContent = done
+        ? '<i class="bi bi-check"></i>'
+        : s.n;
       return `
-        <span class="ft-step ${cls}">
-          <span>${icon}</span>
-          <span class="ft-step-label">${s.label}</span>
-        </span>${sep}`;
+        <div class="ft-step-v2 ${cls}">
+          <div class="ft-step-v2-circle">${circleContent}</div>
+          <div class="ft-step-v2-label">${s.label}</div>
+        </div>`;
     }).join('');
-    return `<div class="ft-steps no-print">${parts}</div>`;
+    return `<div class="ft-steps-v2 no-print">${parts}</div>`;
   }
 }

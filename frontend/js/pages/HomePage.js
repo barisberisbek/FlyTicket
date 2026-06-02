@@ -7,12 +7,21 @@ import { Toast } from '../components/Toast.js';
 mountChrome();
 const host = appHost();
 host.innerHTML = `
-  <section class="text-center mb-4">
-    <h1 class="display-6 fw-bold">Find your next flight</h1>
-    <p class="text-muted">Domestic flights across all 81 provinces of Türkiye.</p>
-  </section>
-  <div id="ft-search-host"></div>
-  <div id="ft-results"></div>
+  <div class="ft-hero">
+    <div class="container">
+      <div class="ft-hero-content">
+        <span class="ft-hero-icon">✈</span>
+        <h1>Find Your Perfect Flight</h1>
+        <p class="ft-hero-sub">Domestic flights across all 81 provinces of Türkiye</p>
+      </div>
+      <div class="ft-search-hero">
+        <div id="ft-search-host"></div>
+      </div>
+    </div>
+  </div>
+  <div class="container ft-results-section">
+    <div id="ft-results"></div>
+  </div>
 `;
 
 const list = new FlightList({ flights: [] });
@@ -21,7 +30,6 @@ list.mount(document.getElementById('ft-results'));
 const search = new FlightSearchForm({
   cities: [],
   onSearch: async ({ from, to, date, returnDate, passengers, tripType }) => {
-    // Persist for booking flow
     sessionStorage.setItem('ft_passengers', String(passengers || 1));
     if (tripType === 'round' && returnDate) {
       sessionStorage.setItem('ft_trip_type', 'round');
@@ -52,14 +60,12 @@ search.mount(document.getElementById('ft-search-host'));
     const { cities } = await api.get('/cities');
     search.setCities(cities);
 
-    // Check for URL pre-fill params (from round-trip return CTA)
     const urlParams = new URLSearchParams(location.search);
     const hasPreFill = urlParams.get('from') || urlParams.get('to') || urlParams.get('date');
 
     if (hasPreFill) {
-      // Trigger auto-search with pre-filled params
       const from = urlParams.get('from') || '';
-      const to   = urlParams.get('to') || '';
+      const to   = urlParams.get('to')   || '';
       const date = urlParams.get('date') || '';
       list.setLoading(true);
       const qp = new URLSearchParams();

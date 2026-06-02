@@ -32,6 +32,15 @@ export function fmtDuration(from, to) {
   return `${h}h ${m}m`;
 }
 
+export function cityCode(name) {
+  return (name || '')
+    .replace(/İ/g, 'I').replace(/Ş/g, 'S').replace(/Ğ/g, 'G')
+    .replace(/Ü/g, 'U').replace(/Ç/g, 'C').replace(/Ö/g, 'O')
+    .replace(/ı/g, 'I').replace(/ş/g, 'S').replace(/ğ/g, 'G')
+    .replace(/ü/g, 'U').replace(/ç/g, 'C').replace(/ö/g, 'O')
+    .substring(0, 3).toUpperCase();
+}
+
 export function toLocalInput(d) {
   if (!d) return '';
   const dt = new Date(d);

@@ -23,12 +23,12 @@ export class FlightList extends Component {
     if (this.state.loading) return `<div id="ft-list-root"><div id="ft-skeleton-host"></div></div>`;
 
     const sortBar = count > 0 ? `
-      <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
-        <span class="small text-muted fw-semibold">${count} flight${count !== 1 ? 's' : ''} found</span>
-        <div class="ms-auto btn-group btn-group-sm">
-          <button class="btn ${this.state.sort === 'time' ? 'btn-primary' : 'btn-outline-secondary'}" data-sort="time">⏰ Time</button>
-          <button class="btn ${this.state.sort === 'price_asc' ? 'btn-primary' : 'btn-outline-secondary'}" data-sort="price_asc">₺ ↑</button>
-          <button class="btn ${this.state.sort === 'price_desc' ? 'btn-primary' : 'btn-outline-secondary'}" data-sort="price_desc">₺ ↓</button>
+      <div class="ft-sort-bar">
+        <span class="ft-sort-count"><i class="bi bi-airplane me-1"></i>${count} flight${count !== 1 ? 's' : ''} found</span>
+        <div class="ms-auto d-flex gap-1">
+          <button class="ft-sort-btn ${this.state.sort === 'time' ? 'active' : ''}" data-sort="time"><i class="bi bi-clock me-1"></i>Time</button>
+          <button class="ft-sort-btn ${this.state.sort === 'price_asc' ? 'active' : ''}" data-sort="price_asc">₺ ↑</button>
+          <button class="ft-sort-btn ${this.state.sort === 'price_desc' ? 'active' : ''}" data-sort="price_desc">₺ ↓</button>
         </div>
       </div>` : '';
 

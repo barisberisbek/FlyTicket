@@ -1,5 +1,5 @@
 import { Component } from './Component.js';
-import { fmtDateTime, fmtPrice, fmtDuration } from '../utils/format.js';
+import { fmtTime, fmtDate, fmtPrice, fmtDuration, cityCode } from '../utils/format.js';
 import { flightStatusBadgeHtml } from './FlightStatusBadge.js';
 
 export class FlightCard extends Component {
@@ -9,33 +9,52 @@ export class FlightCard extends Component {
     const to   = f.to_city?.city_name || '?';
     const sold = f.seats_available <= 0;
     const cancelled = f.status === 'cancelled';
+    const bookable = !sold && !cancelled;
+
+    const seats = sold ? `<span class="text-danger">Sold out</span>`
+      : `<span>${f.seats_available} seats</span>`;
 
     return `
-    <div class="flight-card p-3 mb-3">
-      <div class="row align-items-center g-3">
-        <div class="col-12 col-md-6">
-          <div class="d-flex align-items-center gap-2 fs-5 fw-semibold flex-wrap">
-            <span>${from}</span>
-            <span class="route-arrow" aria-hidden="true">&rarr;</span>
-            <span>${to}</span>
-            <span class="ms-1">${flightStatusBadgeHtml(f.status)}</span>
+    <div class="ft-fc ft-animate-in">
+      <div class="ft-fc-header">
+        <i class="bi bi-airplane-fill"></i>
+        <span>${f.flight_id}</span>
+        <span class="mx-1" style="opacity:.3">·</span>
+        <span>Economy</span>
+        <span class="ms-auto">${flightStatusBadgeHtml(f.status)}</span>
+      </div>
+      <div class="ft-fc-body">
+        <div class="ft-route">
+          <div class="ft-city-block">
+            <div class="ft-city-code">${cityCode(from)}</div>
+            <div class="ft-city-time">${fmtTime(f.departure_time)}</div>
+            <div class="ft-city-name">${from}</div>
           </div>
-          <div class="text-muted small mt-1">
-            <span>${fmtDateTime(f.departure_time)}</span>
-            <span class="mx-2">•</span>
-            <span>${fmtDuration(f.departure_time, f.arrival_time)}</span>
-            <span class="mx-2">•</span>
-            <span>${f.seats_available}/${f.seats_total} seats</span>
+          <div class="ft-route-mid">
+            <div class="ft-route-duration">${fmtDuration(f.departure_time, f.arrival_time)}</div>
+            <div class="ft-route-line">
+              <div class="ft-route-plane-icon"><i class="bi bi-airplane"></i></div>
+            </div>
+            <div style="font-size:.68rem;color:var(--ft-text-muted);font-weight:500">Direct</div>
           </div>
-          <div class="text-muted small">Flight ${f.flight_id}</div>
+          <div class="ft-city-block text-end">
+            <div class="ft-city-code">${cityCode(to)}</div>
+            <div class="ft-city-time">${fmtTime(f.arrival_time)}</div>
+            <div class="ft-city-name">${to}</div>
+          </div>
         </div>
-        <div class="col-6 col-md-3 text-md-end">
-          <div class="fs-4 fw-bold text-primary">${fmtPrice(f.price)}</div>
+      </div>
+      <div class="ft-fc-footer">
+        <div class="ft-fc-meta">
+          <span><i class="bi bi-calendar3"></i> ${fmtDate(f.departure_time)}</span>
+          <span><i class="bi bi-people"></i> ${seats}</span>
         </div>
-        <div class="col-6 col-md-3 d-grid">
-          <a class="btn ${sold || cancelled ? 'btn-secondary disabled' : 'btn-primary'}"
-             href="${!sold && !cancelled ? `flight-detail.html?id=${f._id}` : '#'}">
-            ${cancelled ? 'Cancelled' : sold ? 'Sold out' : 'Book'}
+        <div class="ft-fc-price-block">
+          <div class="ft-fc-price">${fmtPrice(f.price)}</div>
+          <a class="btn btn-primary btn-sm px-3 ${bookable ? '' : 'disabled'}"
+             href="${bookable ? `flight-detail.html?id=${f._id}` : '#'}"
+             style="font-size:.82rem">
+            ${cancelled ? 'Cancelled' : sold ? 'Sold out' : 'Book <i class="bi bi-arrow-right"></i>'}
           </a>
         </div>
       </div>
