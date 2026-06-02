@@ -13,7 +13,7 @@
     ],
     "flight_id": "FLMV9S395YYV",
     "createdAt": "2026-06-02T07:33:45.106Z",
-    "updatedAt": "2026-06-02T07:34:57.252Z",
+    "updatedAt": "2026-06-02T08:41:28.510Z",
     "__v": 0
   },
   {
@@ -90,8 +90,9 @@
     "booked_seats": [],
     "flight_id": "FLKP1JD9E34V",
     "createdAt": "2026-06-02T07:33:45.116Z",
-    "updatedAt": "2026-06-02T07:33:45.116Z",
-    "__v": 0
+    "updatedAt": "2026-06-02T08:44:36.103Z",
+    "__v": 0,
+    "status": "scheduled"
   },
   {
     "_id": "6a1e87592cf9d0f598504f39",
@@ -101,11 +102,13 @@
     "arrival_time": "2026-06-09T13:00:00.000Z",
     "price": 870,
     "seats_total": 90,
-    "seats_available": 90,
-    "booked_seats": [],
+    "seats_available": 89,
+    "booked_seats": [
+      "15B"
+    ],
     "flight_id": "FLK3KLUDYPWQ",
     "createdAt": "2026-06-02T07:33:45.118Z",
-    "updatedAt": "2026-06-02T07:33:45.118Z",
+    "updatedAt": "2026-06-02T08:44:34.346Z",
     "__v": 0
   },
   {
@@ -120,8 +123,9 @@
     "booked_seats": [],
     "flight_id": "FLZC3NQOZJVK",
     "createdAt": "2026-06-02T07:33:45.121Z",
-    "updatedAt": "2026-06-02T07:33:45.121Z",
-    "__v": 0
+    "updatedAt": "2026-06-02T08:41:28.536Z",
+    "__v": 0,
+    "status": "delayed"
   },
   {
     "_id": "6a1e87592cf9d0f598504f3d",

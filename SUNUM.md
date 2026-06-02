@@ -3,14 +3,14 @@
 
 ---
 
-## SUNUM ÖNCESİ HAZIRLIK (Her seferinde)
+## SİSTEM BAŞLATMA (Her sunumdan önce)
 
 ### 1. MongoDB servisini kontrol et
 ```powershell
 Get-Service MongoDB
 # Status: Running olmalı
 ```
-Durmuşsa başlat:
+Durmuşsa:
 ```powershell
 Start-Service MongoDB
 ```
@@ -20,7 +20,7 @@ Start-Service MongoDB
 cd C:\Users\baris\Desktop\FlyTicket\backend
 npm run dev
 ```
-✅ Beklenen çıktı:
+✅ Beklenen:
 ```
 MongoDB connected
 FlyTicket API listening on :5000
@@ -31,174 +31,186 @@ FlyTicket API listening on :5000
 cd C:\Users\baris\Desktop\FlyTicket\frontend
 npx live-server --port=3000
 ```
-✅ Tarayıcı otomatik açılır: **http://localhost:3000**
+✅ Tarayıcı açılır: **http://localhost:3000**
 
 > **Önemli:** `127.0.0.1:3000` değil, `localhost:3000` kullan!
 
 ---
 
-## DEMO SENARYOSU (Hocaya gösterilecek sıra)
+## GİRİŞ BİLGİLERİ
+
+| Hesap | Bilgi |
+|-------|-------|
+| **Admin** | `http://localhost:3000/admin-login.html` → `admin` / `Admin123!` |
+| **User** | `http://localhost:3000/login.html` → `ahmet@test.com` / `test123` |
+| **Test kart** | `4111 1111 1111 1111` · Exp `12/29` · CVV `123` |
 
 ---
 
-### BÖLÜM 1 — Ana Sayfa / Uçuş Arama
+## DEMO SENARYOSU
+
+### BÖLÜM 1 — Ana Sayfa & Uçuş Arama
 **URL:** `http://localhost:3000`
 
-**Göster:**
-- Sayfa açılışında 30 uçuş listeleniyor (3 günlük)
-- From/To dropdown'larında **81 Türkiye şehri** mevcut
-- Her uçuş kartında: rota, kalkış/varış saati, süre, koltuk durumu, fiyat
+> *"81 Türkiye şehri One Way / Round Trip seçeneği ve yolcu sayısı ile aranabilir."*
 
-**Canlı test:**
-1. From = **İstanbul**, To = **Ankara** → Search
-   → 1 sonuç: 09.06, 11:00, ₺850
-2. Aynı şehri seç (İstanbul → İstanbul) → Search
-   → 🔴 Kırmızı inline hata: *"Origin and destination must differ"*
-3. Sadece From = **Ankara** seç, To boş → Search
-   → Ankara'dan kalkan tüm uçuşlar
-4. Boş arama → Tüm 30 uçuş
+- Sayfa açılışında 30 uçuş listelenir (3 günlük)
+- **One Way / Round Trip** toggle → Round Trip seçince Return Date görünür
+- **Passengers** dropdown: 1–4 kişi
+- **Sort bar:** ⏰ Time · ₺↑ · ₺↓ butonları
+- Aynı şehir seçilince inline hata (Origin must differ)
+- İstanbul → Ankara ara → 1 sonuç · **₺850**
 
 ---
 
-### BÖLÜM 2 — Uçuş Detay & Koltuk Seçimi
-**İstanbul→Ankara uçuşundan "Book" tıkla**
-
-**Göster:**
-- Uçuş özet kartı (tarih, saat, süre, fiyat)
-- İnteraktif koltuk haritası (A–F kolonları, satır numaraları)
-- Koltuk durumları: ⬜ Boş / 🟦 Seçili / 🟥 Dolu
-
-**Canlı test:**
-1. Koltuk seçmeden "Continue" → ⚠️ *"Please select a seat first"* uyarısı
-2. **2B** koltuğuna tıkla → Mavi renk, *"Selected: 2B"*
-3. Tekrar tıkla → Seçim kalkar (toggle)
-4. Formu boş bırak → ✅ Bootstrap inline validasyon hataları
-5. Yolcu bilgisi doldur: *Ali Yılmaz / ali@test.com*
-6. "Continue to payment" → Payment sayfası
+### BÖLÜM 2 — Dark Mode
+- Navbar sağ üstteki **🌙** butonuna tıkla
+- Tüm sayfa karardı, kartlar koyu renge döndü
+- F5 sonrası ayar korunur *(localStorage'a kaydedilir)*
+- ☀️ ile geri dön
 
 ---
 
-### BÖLÜM 3 — Ödeme Simülasyonu
-**Göster:**
-- **← Back to flight** geri butonu (uçuşa dönüş)
-- Order summary: rota, yolcu adı, koltuk no, toplam tutar
-- Ödeme formu
+### BÖLÜM 3 — Uçuş Detay & Koltuk Seçimi
+**İstanbul→Ankara "Book" butonuna tıkla**
 
-**Canlı test — önce hatalı:**
-1. Kart: `1234 5678 9012 3456` → 🔴 *"Invalid card number"* (Luhn)
-2. Expiry: `13/29` → 🔴 *"Use MM/YY format"* (geçersiz ay)
+> *"Step indicator (adım çubuğu) hangi aşamada olduğunu gösterir."*
 
-**Canlı test — geçerli:**
-```
-Kart: 4111 1111 1111 1111
-Son kullanma: 12/29
-CVV: 123
-Kart üzerindeki ad: Ali Yilmaz
-```
-→ "Processing..." (~1.5 saniye)
-→ Otomatik yönlendirme: **booking-confirmation.html**
+- Üstte: **Search → 💺 Select Seat → Payment → Confirm** adım çubuğu
+- Koltuk haritası: A–F kolonları, boş / seçili / dolu renkleri
+- Koltuk seçmeden Continue → uyarı
+- **2B** seç → mavi renk → "Selected: 2B"
+- Form doldur → **Continue to payment**
 
 ---
 
-### BÖLÜM 4 — Rezervasyon Onayı & E-Bilet
-**Göster:**
-- ✅ *"Booking confirmed!"* başarı mesajı
-- E-bilet: Ticket ID, yolcu adı, koltuk, rota, kalkış/varış saatleri
-- Sağ alt: Ticket ID (örn. `TKXXXXXXXX`)
+### BÖLÜM 4 — Ödeme Simülasyonu
+> *"Luhn algoritması kart doğrulaması, 1.5s simüle gecikme, kayıtlı kart desteği."*
 
-**Canlı test:**
-1. **"Download / print e-ticket"** → Browser print dialog açılır
-2. Print preview'da → Sadece e-bilet, navbar/footer gizlenmiş
-3. *"View my tickets"* → Biletlerim sayfasına geç
+- **← Back to flight** geri butonu çalışır
+- Order summary: uçuş, yolcu, koltuk, toplam
+- Kötü kart: `1234 5678 9012 3456` → Invalid card number
+- İyi kart: `4111 1111 1111 1111` · `12/29` · `123`
+- **Pay** → Processing... (~1.5s) → Confirmation
 
 ---
 
-### BÖLÜM 5 — Biletlerim (My Tickets)
+### BÖLÜM 5 — Rezervasyon Onayı & E-Bilet
+> *"Booking_ref ile round-trip dönüş bağlantısı ve kart kaydetme seçeneği."*
+
+- ✅ **Booking confirmed!**
+- E-bilet: Ticket ID, yolcu, koltuk, rota, saatler
+- **Download / print** → print preview'da sadece e-bilet
+- Eğer kayıtlı kullanıcıysa: "Save this card for future payments" seçeneği
+
+---
+
+### BÖLÜM 6 — Multi-Passenger Booking (Yolcu Sayısı)
+Ana sayfaya dön:
+
+> *"2 yolcu seç — sistem 2 koltuk seçimini zorunlu kılar, toplam tutar 2× gösterilir."*
+
+1. Passengers: **2** seç
+2. İstanbul → Ankara ara → Book
+3. Koltuk haritasında **2 koltuk** seç (örn. 3A ve 3B)
+4. Payment'da: "**2 × ₺850,00 = ₺1.700,00**"
+5. Ödeme → Confirmation'da iki ayrı Ticket ID
+
+---
+
+### BÖLÜM 7 — Round-Trip Booking (Gidiş-Dönüş)
+> *"Gidiş uçuşu rezerve edildikten sonra dönüş uçuşu için CTA gösterilir."*
+
+1. **Round Trip** seç, Return Date gir (2 gün sonrası)
+2. İstanbul → Ankara ara → Book → gidiş tamamla
+3. Confirmation'da: **"↩️ Book your return flight"** kutusu
+4. "Search return" butonuna tıkla → form otomatik dolu (Ankara → İstanbul)
+
+---
+
+### BÖLÜM 8 — Biletlerim & İptal Politikası
 **URL:** `http://localhost:3000/my-tickets.html`
 
-**Göster:**
-- Email ile arama: `ali@test.com`
-→ Az önce oluşturulan bilet görünür
-- Tıklayınca e-bilet detayları expand olur
+> *"İptal politikası: >48h tam iade, 24-48h %75, 12-24h %50, <12h iade yok."*
+
+- Email ara: `ahmet@test.com` → biletler görünür
+- **Active | Cancelled** tab sistemi
+- Aktif bir bilette **"Cancel ticket"** butonu
+- Modal açılır → iade tutarı ve yüzdesi gösterilir
+- Onayla → bilet iptal, koltuk geri döner
 
 ---
 
-### BÖLÜM 6 — Kullanıcı Kaydı (Bonus)
-**URL:** `http://localhost:3000/register.html`
+### BÖLÜM 9 — Kullanıcı Profil Sayfası
+`http://localhost:3000/login.html` → giriş → Navbar "👤 Ahmet" dropdown → **My Profile**
 
-**Canlı test:**
-1. Form doldur: *Ayşe / Demir / ayse@demo.com / test123*
-2. Kayıt ol → Ana sayfaya yönlenir
-3. Navbar'da: **"Hi, Ayşe"** ✅
-4. Bir uçuşa git → BookingForm adı/email **otomatik dolu**
+> *"4 sekme: profil bilgisi, şifre değiştirme, kayıtlı kartlar, istatistikler."*
 
----
-
-### BÖLÜM 7 — Admin Paneli
-**URL:** `http://localhost:3000/admin-login.html`
-
-```
-Kullanıcı adı: admin
-Şifre: Admin123!
-```
-
-#### 7a. Dashboard
-**URL:** `http://localhost:3000/admin-dashboard.html`
-
-**Göster:**
-- Başlık: **"Flights 30"** (badge sayaç)
-- Tablo: Flight ID, rota, kalkış/varış, fiyat, koltuk durumu
-- Her satırda [Edit] [Delete] butonları
-
-**Canlı test — yeni uçuş ekle:**
-1. **"+ Add new flight"** tıkla
-2. From = To (Ankara/Ankara) → Save → 🔴 Inline hata
-3. From = **Samsun**, To = **Antalya**
-4. Kalkış: 3 gün sonra 10:00 / Varış: 11:30
-5. Fiyat: 950 / Koltuk: 100
-6. Save → Dashboard'a döner, yeni uçuş tabloda görünür
-
-**Canlı test — düzenle:**
-1. Yeni eklenen uçuşun [Edit] → Form dolu geliyor ✅
-2. Fiyatı 950 → 875 yap → Save
-
-**Canlı test — sil:**
-1. [Delete] → "Delete this flight? This cannot be undone." dialog
-2. Confirm → Tabloda kaybolur, sayaç 30'a döner
-
-#### 7b. Uçuş Kuralları (PDF'in en önemli kısmı!)
-Yeni uçuş eklerken, mevcut bir uçuşla aynı şehir + aynı saat:
-- From = İstanbul, Kalkış = 09.06 11:00 (İstanbul zaten 11:00'de kalkıyor)
-→ 🔴 `Conflict: a flight already departs from İstanbul at 11:00`
-
-#### 7c. Tüm Rezervasyonlar
-**URL:** `http://localhost:3000/admin-bookings.html`
-
-**Göster:**
-- Başlık: **"All bookings N"** (badge)
-- Tablo: Ticket ID, yolcu, email, rota, koltuk, ödeme durumu, tarih
+1. **Profile** tab: isim değiştir → Kaydet → navbar güncellenir
+2. **Security** tab: şifre değiştirme formu
+3. **My Cards** tab: kayıtlı kartlar (varsa) + sil butonu
+4. **Stats** tab: toplam trip, harcama, favori şehir
 
 ---
 
-### BÖLÜM 8 — Güvenlik Kontrolü (Ekstra etkileyici)
+### BÖLÜM 10 — Admin Paneli
+
+#### Dashboard `http://localhost:3000/admin-dashboard.html`
+> *"Üst kısımda 4 metric kart: istatistikler canlı API'den çekiliyor."*
+
+- **Flights 30** badge
+- 4 stat kart: ✈️ Total Flights · 🎫 Bookings · 💰 Revenue · 📊 Avg Occupancy
+- Tablo: Flight ID, rota, kalkış/varış, fiyat, koltuk
+
+**Uçuş durumu değiştir:**
+1. Herhangi bir uçuşta **Edit** → Status: **Delayed** → Save
+2. Dashboard'a dön → uçuş kartında sarı ⏱ Delayed badge görünür
+
+**Uçuş kuralı göster:**
+- "+ Add new flight" → İstanbul 11:00 saatini dene → 409 Conflict hatası
+
+#### Bookings `http://localhost:3000/admin-bookings.html`
+> *"Canlı arama/filtreleme — veritabanına yeni istek gönderilmez."*
+
+- **"All bookings N"** sayaç badge
+- Email filtresi: `pdftest` yaz → anlık filtreleme
+- Status filtresi: Cancelled → iptal edilenler
+
+#### Admin Settings `http://localhost:3000/admin-settings.html`
+- Admin şifre değiştirme formu
+
+---
+
+### BÖLÜM 11 — Güvenlik Kontrolü (Ekstra etkileyici)
 Tarayıcı adres çubuğuna doğrudan yaz:
 
-`http://localhost:3000/admin-dashboard.html`
-
-→ Token yoksa otomatik **admin-login.html**'e yönlenir ✅
+`http://localhost:3000/admin-dashboard.html` → Token yoksa **admin-login.html**'e yönlenir ✅
 
 ---
 
-## TEST KART BİLGİLERİ
+## PDF GEREKSİNİMLERİ UYUM TABLOSU
 
-| Alan | Değer |
-|------|-------|
-| Kart numarası | `4111 1111 1111 1111` |
-| Son kullanma | `12/29` |
-| CVV | `123` |
-| Kart adı | herhangi bir isim |
-
-> Luhn algoritması kontrollü. Bu kart geçer; `1234 5678 9012 3456` geçmez.
+| # | Gereksinim | Durum |
+|---|-----------|-------|
+| 1 | 81 Türkiye şehri | ✅ |
+| 2 | Uçuş listeleme | ✅ `GET /flights` |
+| 3 | Origin/destination/tarih arama | ✅ |
+| 4 | Bilet rezervasyonu | ✅ `POST /tickets` |
+| 5 | Rezervasyon onayı | ✅ E-bilet + print |
+| 6 | Admin login | ✅ JWT korumalı |
+| 7 | Admin uçuş ekle | ✅ `POST /flights` |
+| 8 | Admin uçuş düzenle | ✅ `PUT /flights/:id` |
+| 9 | Admin uçuş sil | ✅ `DELETE /flights/:id` |
+| 10 | Admin tüm rezervasyonlar | ✅ `GET /tickets` |
+| 11 | from ≠ to kuralı | ✅ 400 hatası |
+| 12 | arrival > departure | ✅ 400 hatası |
+| 13 | Aynı saat aynı şehir kalkış | ✅ 409 hatası |
+| 14 | Aynı saat aynı şehir iniş | ✅ 409 hatası |
+| **B1** | Koltuk seçimi | ✅ + çoklu yolcu |
+| **B2** | E-bilet email (SMTP) | ✅ Nodemailer |
+| **B3** | Ödeme simülasyonu | ✅ Luhn + delay |
+| **B4** | Kullanıcı auth | ✅ Register/Login |
+| **B5** | Mobil responsive | ✅ Bootstrap 5 |
 
 ---
 
@@ -206,44 +218,23 @@ Tarayıcı adres çubuğuna doğrudan yaz:
 
 | Soru | Cevap |
 |------|-------|
-| "Neden framework kullanmadın?" | "Dersin müfredatı Vanilla JS + component mimarisini öğretmek amacıyla tasarlandı. `Component` base sınıfı ile `setState/update` döngüsü kurarak kendi mini-framework'ümüzü yazdık." |
-| "Aynı koltuğu iki kişi rezerve edebilir mi?" | "Hayır. Backend MongoDB'nin atomik `findOneAndUpdate` operasyonunu kullanıyor. Seat ikinci kez alınmaya çalışılırsa 409 Conflict döner." |
-| "Şifreler nasıl saklanıyor?" | "bcryptjs ile 10-round salt + hash. Hem admin hem kullanıcı şifresi DB'de düz metin olarak tutulmuyor." |
-| "JWT nerede saklanıyor?" | "Browser localStorage'da iki ayrı key: `flyticket_admin_token` ve `flyticket_user_token`. Admin ve kullanıcı token'ları birbirinden tamamen bağımsız." |
-| "81 şehrin hepsi var mı?" | "Evet. `backend/seed/cities.json` dosyasında 81 il plaka numarasıyla (`01`–`81`) tam liste mevcut. `npm run seed` ile DB'ye yükleniyor." |
-| "Uçuş kurallarını nerede zorunlu kılıyorsun?" | "`backend/utils/flightRules.js` — saat bazlı çakışma kontrolü hem kalkış hem iniş için yapılıyor. Sadece frontend değil, API seviyesinde zorunlu." |
-| "Email gerçekten gidiyor mu?" | "`.env`'de SMTP bilgileri girilirse Nodemailer üzerinden gidiyor. Sunumda SMTP boş, o yüzden sessizce skip ediyor — rezervasyon başarılı olmaya devam ediyor." |
+| "Neden framework yok?" | "Ders müfredatı Vanilla JS component mimarisini öğretmek için tasarlandı. `Component` base sınıfı ile setState/update döngüsü kurarak kendi mini-framework'ümüzü yazdık." |
+| "Aynı koltuğu iki kişi alabilir mi?" | "Hayır. MongoDB'nin atomik `findOneAndUpdate` ile `booked_seats: { $ne: seat }` filtresi aynı anda iki rezervasyonu engeller." |
+| "Şifreler nasıl saklanıyor?" | "bcryptjs ile 10-round salt + hash. DB'de düz metin yok." |
+| "JWT nerede saklanıyor?" | "localStorage'da iki ayrı key: `flyticket_admin_token` ve `flyticket_user_token`. Admin ve kullanıcı token'ları bağımsız." |
+| "İptal politikası nasıl çalışıyor?" | ">48h tam iade, 24-48h %75, 12-24h %50, <12h iade yok. `backend/utils/cancellationPolicy.js` ve `frontend/js/utils/cancellationPolicy.js` aynı mantık." |
+| "Email gerçekten gidiyor mu?" | "`.env`'de SMTP bilgileri girilince Nodemailer ile gönderilir. SMTP boş ise sessizce skip eder, rezervasyon başarılı olmaya devam eder." |
+| "Dark mode nasıl çalışıyor?" | "CSS custom properties `[data-theme='dark']` selector ile. Tercih localStorage'da saklanır, sayfa yüklenmeden önce `initTheme()` uygulanır (FOUC yok)." |
 
 ---
 
-## VERİTABANI EXPORT
+## DB EXPORT GÜNCELLEME
 
-Sunum bitmeden önce çalıştır:
+Sunum bitmeden çalıştır:
 ```powershell
 cd C:\Users\baris\Desktop\FlyTicket\backend
 npm run export
 ```
-→ `database-export/` klasörüne JSON dosyaları kaydedilir:
-- `cities.json` (81 şehir)
-- `flights.json` (30 uçuş)
-- `tickets.json` (rezervasyonlar)
-- `admins.json` (admin hesabı)
-- `users.json` (kayıtlı kullanıcılar)
-
----
-
-## TEKNOLOJİ YIĞINI (Hızlı özet)
-
-| Katman | Teknoloji |
-|--------|-----------|
-| Frontend | HTML5, CSS3, **Vanilla JavaScript ES6** (sınıf tabanlı component mimarisi) |
-| UI Çerçevesi | **Bootstrap 5.3** (CDN) |
-| HTTP İstemci | **Fetch API** (async/await) |
-| Backend | **Node.js** + **Express.js** |
-| Veritabanı | **MongoDB** + **Mongoose** ODM |
-| Kimlik Doğrulama | **JWT** + **bcryptjs** |
-| E-posta | **Nodemailer** (SMTP) |
-| Doğrulama | **express-validator** (backend) + Vanilla JS (frontend) |
 
 ---
 

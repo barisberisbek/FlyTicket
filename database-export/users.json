@@ -7,5 +7,23 @@
     "password": "$2a$10$9ecq4aOY.L2AAv3jTDofn..fKi6WqBb580ViTb3KpF3ObmB18clRe",
     "createdAt": "2026-06-02T07:35:10.288Z",
     "__v": 0
+  },
+  {
+    "_id": "6a1e909ff617cc17f34b6202",
+    "name": "Barış",
+    "surname": "Berişbek",
+    "email": "barisberisbekx@gmail.com",
+    "password": "$2a$10$ZfuT8PX.Izyh/uX4X0wiFeZdPqVcca.KH9qILupIFki/FurpotGHe",
+    "createdAt": "2026-06-02T08:13:19.451Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a1e973868f207fe89f4f07a",
+    "name": "Updated",
+    "surname": "Name",
+    "email": "test2@flyticket.com",
+    "password": "$2a$10$yRVQhlVqPgYJXWrYWMUlWOQ7WeaUA7gpRoJSMSCnwwlVDdJ.6M3LS",
+    "createdAt": "2026-06-02T08:41:28.247Z",
+    "__v": 0
   }
 ]

@@ -4,9 +4,14 @@ import { isEmail } from '../utils/validators.js';
 export class BookingForm extends Component {
   template() {
     const u = this.props.user || {};
+    const n = this.props.passengerCount || 1;
+    const leadNote = n > 1
+      ? `<div class="alert alert-info small mb-3">Lead passenger details — applied to all ${n} tickets.</div>`
+      : '';
     return `
     <form class="card flight-card p-3 p-md-4" id="ft-booking-form" novalidate>
       <h5 class="mb-3">Passenger details</h5>
+      ${leadNote}
       <div class="row g-3">
         <div class="col-12 col-md-6">
           <label class="form-label" for="bf-name">First name</label>
@@ -29,12 +34,13 @@ export class BookingForm extends Component {
       </div>
     </form>`;
   }
+
   bindEvents() {
     this.el.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = this.el.querySelector('#bf-name').value.trim();
+      const name    = this.el.querySelector('#bf-name').value.trim();
       const surname = this.el.querySelector('#bf-surname').value.trim();
-      const email = this.el.querySelector('#bf-email').value.trim();
+      const email   = this.el.querySelector('#bf-email').value.trim();
       let ok = true;
       [['#bf-name', !!name], ['#bf-surname', !!surname], ['#bf-email', isEmail(email)]].forEach(([sel, valid]) => {
         const inp = this.el.querySelector(sel);

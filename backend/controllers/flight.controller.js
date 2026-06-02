@@ -91,4 +91,19 @@ async function remove(req, res, next) {
   } catch (e) { next(e); }
 }
 
-module.exports = { list, getOne, create, update, remove };
+async function updateStatus(req, res, next) {
+  try {
+    const { status } = req.body;
+    const allowed = ['scheduled', 'delayed', 'cancelled'];
+    if (!allowed.includes(status)) {
+      return res.status(400).json({ error: { message: `status must be one of: ${allowed.join(', ')}` } });
+    }
+    const flight = await Flight.findByIdAndUpdate(req.params.id, { status }, { new: true })
+      .populate('from_city', 'city_id city_name')
+      .populate('to_city', 'city_id city_name');
+    if (!flight) return res.status(404).json({ error: { message: 'Flight not found' } });
+    res.json({ flight });
+  } catch (e) { next(e); }
+}
+
+module.exports = { list, getOne, create, update, remove, updateStatus };

@@ -51,6 +51,15 @@ export class AdminFlightForm extends Component {
           <label class="form-label" for="aff-seats">Total seats</label>
           <input type="number" min="1" step="1" class="form-control" id="aff-seats" value="${f.seats_total ?? 60}" required />
         </div>
+        ${this.props.mode === 'edit' ? `
+        <div class="col-12 col-md-6">
+          <label class="form-label" for="aff-status">Flight Status</label>
+          <select class="form-select" id="aff-status">
+            <option value="scheduled" ${(f.status || 'scheduled') === 'scheduled' ? 'selected' : ''}>✈ Scheduled</option>
+            <option value="delayed" ${f.status === 'delayed' ? 'selected' : ''}>⏱ Delayed</option>
+            <option value="cancelled" ${f.status === 'cancelled' ? 'selected' : ''}>✕ Cancelled</option>
+          </select>
+        </div>` : ''}
       </div>
       <div class="d-flex gap-2 mt-3">
         <button type="submit" class="btn btn-primary" ${this.state.saving ? 'disabled' : ''}>
@@ -82,6 +91,8 @@ export class AdminFlightForm extends Component {
         price: Number(this.el.querySelector('#aff-price').value),
         seats_total: Number(this.el.querySelector('#aff-seats').value),
       };
+      const statusEl = this.el.querySelector('#aff-status');
+      if (statusEl) data.status = statusEl.value;
       this.props.onSubmit?.(data);
     });
   }

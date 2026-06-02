@@ -11,6 +11,7 @@ const flightSchema = new mongoose.Schema({
   seats_total: { type: Number, required: true, min: 1 },
   seats_available: { type: Number, required: true, min: 0 },
   booked_seats: { type: [String], default: [] },
+  status: { type: String, enum: ['scheduled', 'delayed', 'cancelled'], default: 'scheduled' },
 }, { timestamps: true });
 
 flightSchema.pre('validate', function (next) {

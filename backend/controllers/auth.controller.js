@@ -17,4 +17,23 @@ async function login(req, res, next) {
   } catch (e) { next(e); }
 }
 
-module.exports = { login };
+async function changeAdminPassword(req, res, next) {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: { message: 'currentPassword and newPassword required' } });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: { message: 'newPassword must be at least 6 characters' } });
+    }
+    const admin = await Admin.findById(req.user.sub);
+    if (!admin) return res.status(404).json({ error: { message: 'Admin not found' } });
+    const ok = await admin.comparePassword(currentPassword);
+    if (!ok) return res.status(401).json({ error: { message: 'Current password is incorrect' } });
+    admin.password = newPassword;
+    await admin.save();
+    res.json({ ok: true, message: 'Password updated successfully' });
+  } catch (e) { next(e); }
+}
+
+module.exports = { login, changeAdminPassword };

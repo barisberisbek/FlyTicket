@@ -6,6 +6,7 @@ const { requireAdmin, requireAuth, optionalAuth } = require('../middleware/auth.
 router.post('/', optionalAuth, v.ticketCreate, v.runValidation, ctrl.create);
 router.get('/mine', requireAuth, ctrl.listMine);
 router.get('/id/:ticketId', ctrl.getById);
+router.patch('/:ticketId/cancel', requireAuth, ctrl.cancel);
 router.get('/', requireAdmin, ctrl.listAll);
 router.get('/:email', ctrl.listByEmail);
 

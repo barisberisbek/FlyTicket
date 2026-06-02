@@ -5,7 +5,6 @@ import { FlightList } from '../components/FlightList.js';
 import { Toast } from '../components/Toast.js';
 
 mountChrome();
-
 const host = appHost();
 host.innerHTML = `
   <section class="text-center mb-4">
@@ -16,14 +15,27 @@ host.innerHTML = `
   <div id="ft-results"></div>
 `;
 
+const list = new FlightList({ flights: [] });
+list.mount(document.getElementById('ft-results'));
+
 const search = new FlightSearchForm({
   cities: [],
-  onSearch: async ({ from, to, date }) => {
+  onSearch: async ({ from, to, date, returnDate, passengers, tripType }) => {
+    // Persist for booking flow
+    sessionStorage.setItem('ft_passengers', String(passengers || 1));
+    if (tripType === 'round' && returnDate) {
+      sessionStorage.setItem('ft_trip_type', 'round');
+      sessionStorage.setItem('ft_return_date', returnDate);
+    } else {
+      sessionStorage.removeItem('ft_trip_type');
+      sessionStorage.removeItem('ft_return_date');
+    }
+
     list.setLoading(true);
     try {
       const params = new URLSearchParams();
       if (from) params.set('from', from);
-      if (to) params.set('to', to);
+      if (to)   params.set('to', to);
       if (date) params.set('date', date);
       const { flights } = await api.get(`/flights?${params.toString()}`);
       list.setFlights(flights);
@@ -35,15 +47,31 @@ const search = new FlightSearchForm({
 });
 search.mount(document.getElementById('ft-search-host'));
 
-const list = new FlightList({ flights: [] });
-list.mount(document.getElementById('ft-results'));
-
 (async () => {
   try {
     const { cities } = await api.get('/cities');
     search.setCities(cities);
-    const { flights } = await api.get('/flights');
-    list.setFlights(flights);
+
+    // Check for URL pre-fill params (from round-trip return CTA)
+    const urlParams = new URLSearchParams(location.search);
+    const hasPreFill = urlParams.get('from') || urlParams.get('to') || urlParams.get('date');
+
+    if (hasPreFill) {
+      // Trigger auto-search with pre-filled params
+      const from = urlParams.get('from') || '';
+      const to   = urlParams.get('to') || '';
+      const date = urlParams.get('date') || '';
+      list.setLoading(true);
+      const qp = new URLSearchParams();
+      if (from) qp.set('from', from);
+      if (to)   qp.set('to', to);
+      if (date) qp.set('date', date);
+      const { flights } = await api.get(`/flights?${qp.toString()}`);
+      list.setFlights(flights);
+    } else {
+      const { flights } = await api.get('/flights');
+      list.setFlights(flights);
+    }
   } catch (e) {
     Toast.show(e.message || 'Failed to load data', 'danger');
   }

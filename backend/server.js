@@ -10,6 +10,8 @@ const cityRoutes = require('./routes/city.routes');
 const flightRoutes = require('./routes/flight.routes');
 const ticketRoutes = require('./routes/ticket.routes');
 const paymentRoutes = require('./routes/payment.routes');
+const cardRoutes = require('./routes/card.routes');
+const adminRoutes = require('./routes/admin.routes');
 const errorMiddleware = require('./middleware/error.middleware');
 
 const app = express();
@@ -32,6 +34,8 @@ app.use('/api/cities', cityRoutes);
 app.use('/api/flights', flightRoutes);
 app.use('/api/tickets', ticketRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/cards', cardRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use((req, res) => res.status(404).json({ error: { message: 'Route not found' } }));
 app.use(errorMiddleware);

@@ -7,6 +7,7 @@ router.get('/', ctrl.list);
 router.get('/:id', ctrl.getOne);
 router.post('/', requireAdmin, v.flightCreate, v.runValidation, ctrl.create);
 router.put('/:id', requireAdmin, v.flightUpdate, v.runValidation, ctrl.update);
+router.patch('/:id/status', requireAdmin, ctrl.updateStatus);
 router.delete('/:id', requireAdmin, ctrl.remove);
 
 module.exports = router;

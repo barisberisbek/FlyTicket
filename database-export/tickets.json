@@ -24,5 +24,37 @@
     "ticket_id": "TKG1W9WZ76SD",
     "createdAt": "2026-06-02T07:37:57.791Z",
     "__v": 0
+  },
+  {
+    "_id": "6a1e973868f207fe89f4f086",
+    "passenger_name": "Cancel",
+    "passenger_surname": "Test",
+    "passenger_email": "test2@flyticket.com",
+    "flight_id": "6a1e87592cf9d0f598504f2d",
+    "seat_number": "10A",
+    "payment_status": "paid",
+    "status": "cancelled",
+    "cancelled_at": "2026-06-02T08:41:28.512Z",
+    "booking_ref": null,
+    "user_id": "6a1e973868f207fe89f4f07a",
+    "ticket_id": "TKJAB4QZXBQS",
+    "createdAt": "2026-06-02T08:41:28.481Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a1e97f268f207fe89f4f0be",
+    "passenger_name": "PDF",
+    "passenger_surname": "Test",
+    "passenger_email": "pdftest@check.com",
+    "flight_id": "6a1e87592cf9d0f598504f39",
+    "seat_number": "15B",
+    "payment_status": "paid",
+    "status": "active",
+    "cancelled_at": null,
+    "booking_ref": null,
+    "user_id": null,
+    "ticket_id": "TK314ICS2DYR",
+    "createdAt": "2026-06-02T08:44:34.350Z",
+    "__v": 0
   }
 ]
