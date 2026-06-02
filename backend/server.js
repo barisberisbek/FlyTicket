@@ -14,7 +14,13 @@ const errorMiddleware = require('./middleware/error.middleware');
 
 const app = express();
 
-app.use(cors({ origin: process.env.CORS_ORIGIN || '*', credentials: true }));
+const allowedOrigins = (process.env.CORS_ORIGIN || '*').split(',').map((s) => s.trim());
+app.use(cors({
+  origin: allowedOrigins.length === 1 && allowedOrigins[0] === '*'
+    ? '*'
+    : (origin, cb) => cb(null, !origin || allowedOrigins.includes(origin)),
+  credentials: true,
+}));
 app.use(express.json());
 app.use(morgan('dev'));
 

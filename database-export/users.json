@@ -1,0 +1,11 @@
+[
+  {
+    "_id": "6a1e87aeb03c84b5b4920641",
+    "name": "Ahmet",
+    "surname": "Yilmaz",
+    "email": "ahmet@test.com",
+    "password": "$2a$10$9ecq4aOY.L2AAv3jTDofn..fKi6WqBb580ViTb3KpF3ObmB18clRe",
+    "createdAt": "2026-06-02T07:35:10.288Z",
+    "__v": 0
+  }
+]

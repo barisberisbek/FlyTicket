@@ -11,7 +11,7 @@ mountChrome();
 const host = appHost();
 host.innerHTML = `
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="mb-0">Flights</h3>
+    <h3 class="mb-0">Flights <span class="badge bg-secondary ms-1" id="ft-flight-count"></span></h3>
     <a href="admin-flight-form.html" class="btn btn-primary">+ Add new flight</a>
   </div>
   <div id="ft-table-host"></div>
@@ -37,8 +37,10 @@ async function load() {
   try {
     const { flights } = await api.get('/flights');
     spin.unmount();
-    if (!table.el) table.mount(tableHost); else table.setFlights(flights);
+    if (!table.el) table.mount(tableHost);
     table.setFlights(flights);
+    const badge = document.getElementById('ft-flight-count');
+    if (badge) badge.textContent = flights.length;
   } catch (e) {
     Toast.show(e.message || 'Load failed', 'danger');
   }

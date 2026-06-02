@@ -175,20 +175,26 @@ with status codes `400 / 401 / 403 / 404 / 409 / 500`.
 
 ## Database export / import
 
-Export from a running local instance:
+Run the seed first (`npm run seed`), then export:
 
+**Windows:**
+```bat
+database-export\generate-export.bat
+```
+
+**macOS / Linux:**
 ```bash
 mongodump --db flyticket --out database-export/
 ```
 
-Restore in a fresh environment:
+Restore on another machine:
 
 ```bash
-mongorestore database-export/
+mongorestore --db flyticket database-export/flyticket/
 ```
 
-A `.gitkeep` placeholder ships in `database-export/` so the directory is
-preserved.
+> The `database-export/` directory ships with a convenience script
+> (`generate-export.bat`) that runs `mongodump` for you.
 
 ---
 

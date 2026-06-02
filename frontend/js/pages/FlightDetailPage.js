@@ -59,6 +59,12 @@ function renderPage(flight) {
   });
   seatMap.mount(document.getElementById('ft-seatmap-host'));
 
+  if (flight.seats_available === 0) {
+    document.getElementById('ft-booking-host').innerHTML =
+      `<div class="alert alert-danger mt-2"><strong>Sold out.</strong> This flight has no available seats.</div>`;
+    return;
+  }
+
   const bookingForm = new BookingForm({
     user: getCurrentUser() || undefined,
     onSubmit: (passenger) => {

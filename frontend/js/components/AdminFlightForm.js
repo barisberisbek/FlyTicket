@@ -26,12 +26,14 @@ export class AdminFlightForm extends Component {
           <select class="form-select" id="aff-from" required>
             <option value="">Select origin</option>${opts(fromId)}
           </select>
+          <div class="invalid-feedback">Origin city is required.</div>
         </div>
         <div class="col-12 col-md-6">
           <label class="form-label" for="aff-to">To</label>
           <select class="form-select" id="aff-to" required>
             <option value="">Select destination</option>${opts(toId)}
           </select>
+          <div class="invalid-feedback">Destination required and must differ from origin.</div>
         </div>
         <div class="col-12 col-md-6">
           <label class="form-label" for="aff-dep">Departure</label>
@@ -61,9 +63,20 @@ export class AdminFlightForm extends Component {
   bindEvents() {
     this.el.addEventListener('submit', (e) => {
       e.preventDefault();
+      const fromSel = this.el.querySelector('#aff-from');
+      const toSel = this.el.querySelector('#aff-to');
+      const fromVal = fromSel.value;
+      const toVal = toSel.value;
+      let ok = true;
+      if (!fromVal) { fromSel.classList.add('is-invalid'); ok = false; }
+      else fromSel.classList.remove('is-invalid');
+      if (!toVal) { toSel.classList.add('is-invalid'); ok = false; }
+      else if (fromVal && fromVal === toVal) { toSel.classList.add('is-invalid'); ok = false; }
+      else toSel.classList.remove('is-invalid');
+      if (!ok) return;
       const data = {
-        from_city: this.el.querySelector('#aff-from').value,
-        to_city: this.el.querySelector('#aff-to').value,
+        from_city: fromVal,
+        to_city: toVal,
         departure_time: new Date(this.el.querySelector('#aff-dep').value).toISOString(),
         arrival_time: new Date(this.el.querySelector('#aff-arr').value).toISOString(),
         price: Number(this.el.querySelector('#aff-price').value),

@@ -13,6 +13,7 @@ if (!draftRaw) {
 } else {
   const draft = JSON.parse(draftRaw);
   host.innerHTML = `
+    <a href="flight-detail.html?id=${draft.flight_id}" class="btn btn-link ps-0 mb-2">&larr; Back to flight</a>
     <h3 class="mb-3">Complete your booking</h3>
     <div class="row g-3">
       <div class="col-12 col-lg-5">

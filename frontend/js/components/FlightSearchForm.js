@@ -18,12 +18,14 @@ export class FlightSearchForm extends Component {
           <select class="form-select" id="from" required>
             <option value="">Select origin</option>${opts}
           </select>
+          <div class="invalid-feedback">Origin and destination must differ.</div>
         </div>
         <div class="col-12 col-md-4">
           <label for="to" class="form-label">To</label>
           <select class="form-select" id="to" required>
             <option value="">Select destination</option>${opts}
           </select>
+          <div class="invalid-feedback">Origin and destination must differ.</div>
         </div>
         <div class="col-12 col-md-3">
           <label for="date" class="form-label">Date</label>
@@ -38,9 +40,18 @@ export class FlightSearchForm extends Component {
   bindEvents() {
     this.el.addEventListener('submit', (e) => {
       e.preventDefault();
-      const from = this.el.querySelector('#from').value;
-      const to = this.el.querySelector('#to').value;
+      const fromSel = this.el.querySelector('#from');
+      const toSel = this.el.querySelector('#to');
+      const from = fromSel.value;
+      const to = toSel.value;
       const date = this.el.querySelector('#date').value;
+      if (from && to && from === to) {
+        fromSel.classList.add('is-invalid');
+        toSel.classList.add('is-invalid');
+        return;
+      }
+      fromSel.classList.remove('is-invalid');
+      toSel.classList.remove('is-invalid');
       this.props.onSearch?.({ from, to, date });
     });
   }

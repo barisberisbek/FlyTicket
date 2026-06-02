@@ -1,0 +1,28 @@
+[
+  {
+    "_id": "6a1e87a1b03c84b5b492063c",
+    "passenger_name": "Test",
+    "passenger_surname": "Kullanici",
+    "passenger_email": "test@example.com",
+    "flight_id": "6a1e87592cf9d0f598504f2d",
+    "seat_number": "1A",
+    "payment_status": "paid",
+    "user_id": null,
+    "ticket_id": "TKMF8DHXPY7E",
+    "createdAt": "2026-06-02T07:34:57.271Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a1e8855b03c84b5b4920676",
+    "passenger_name": "Mehmet",
+    "passenger_surname": "Demir",
+    "passenger_email": "mehmet@demo.com",
+    "flight_id": "6a1e87592cf9d0f598504f2f",
+    "seat_number": "5C",
+    "payment_status": "paid",
+    "user_id": null,
+    "ticket_id": "TKG1W9WZ76SD",
+    "createdAt": "2026-06-02T07:37:57.791Z",
+    "__v": 0
+  }
+]

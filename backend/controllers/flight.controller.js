@@ -8,9 +8,9 @@ async function list(req, res, next) {
     if (from) filter.from_city = from;
     if (to) filter.to_city = to;
     if (date) {
-      const start = new Date(date);
-      if (!Number.isNaN(start.getTime())) {
-        const dayStart = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      const parts = String(date).split('-').map(Number);
+      if (parts.length === 3 && parts.every((n) => !Number.isNaN(n))) {
+        const dayStart = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
         const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000);
         filter.departure_time = { $gte: dayStart, $lt: dayEnd };
       }

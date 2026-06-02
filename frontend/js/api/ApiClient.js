@@ -1,7 +1,10 @@
 import { getAdminToken, getUserToken } from '../utils/auth.js';
 
+const API_BASE = (typeof window !== 'undefined' && window.__FT_API_URL__)
+  || 'http://localhost:5000/api';
+
 export class ApiClient {
-  constructor(baseUrl = 'http://localhost:5000/api') {
+  constructor(baseUrl = API_BASE) {
     this.baseUrl = baseUrl;
   }
 
